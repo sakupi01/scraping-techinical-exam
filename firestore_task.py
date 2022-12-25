@@ -10,17 +10,17 @@ db = firestore.client() # to talk with this db
 
 # Set documents with auto UUIDs(No .document() option)
 # # It's perfect combination between Python and Firestore as they both share Key-Value function. 
-data = {
-    # name : str,
-    # rating : float,
-    url : str,
-    # address : str,
-    # price_type : str,
-    # review_highlights : list,
-    geohash: str,
-    latitude: float,
-    longitude: float
-} 
+# data = {
+#     name : str,
+#     rating : float,
+#     url : str,
+#     address : str,
+#     price_type : str,
+#     review_highlights : list,
+#     geohash: str,
+#     latitude: float,
+#     longitude: float
+# } 
 
 collection = db.collection('venues')
 
@@ -40,4 +40,15 @@ def add_data(data):
 # ❤️ Set data to document! 
 # ❤️ Add data to collection! 
 
-
+def get_name(rating: int):
+    li = collection.where('rating', '>', rating).order_by('rating', direction=firestore.Query.DESCENDING).get()
+    # print(li)
+    if li != None:
+        venue = dict()
+        key = 0
+        for el in li:
+            venue[key] = el.to_dict()
+            key += 1
+        return venue
+    else: return  "No match"
+print(get_name(4))
