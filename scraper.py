@@ -93,7 +93,7 @@ class Scr():
             else:
                 lat, lon = None, None
                 geohash = None
-            data["geohash"] = pgh.encode(lat, lon)
+            data["geohash"] = pgh.encode(lat, lon, precision = 8)
             data["latitude"], data["longtitude"] = lat, lon
             
             self.all_content.append(temp)
