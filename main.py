@@ -4,7 +4,6 @@ from firestore_task import collection
 from firebase_admin import firestore
 import pygeohash as pgh
 import math
-import csv
 
 geohashChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
  
@@ -31,14 +30,14 @@ class GeoLocation:
     
     @classmethod
     def from_degrees(cls, deg_lat, deg_lon):
-        rad_lat = math.radians(deg_lat)
-        rad_lon = math.radians(deg_lon)
+        rad_lat = math.radians(float(deg_lat))
+        rad_lon = math.radians(float(deg_lon))
         return GeoLocation(rad_lat, rad_lon, deg_lat, deg_lon)
         
     @classmethod
     def from_radians(cls, rad_lat, rad_lon):
-        deg_lat = math.degrees(rad_lat)
-        deg_lon = math.degrees(rad_lon)
+        deg_lat = math.degrees(float(rad_lat))
+        deg_lon = math.degrees(float(rad_lon))
         return GeoLocation(rad_lat, rad_lon, deg_lat, deg_lon)
     
     
@@ -150,24 +149,25 @@ def getArea(li):
     Min = min(li)
     Max = max(li)
     geohashList = []
+    print(Min, Max)
     for i in range(Min, Max + 1):
         geohash = numToGeohash(i)
         point = pgh.decode_exactly(geohash)[:2]
         geohashList.append({'geohash': geohash, 'geolocation': GeoLocation.from_degrees(point[0], point[1])})
-
     return geohashList
 
 def GetHashes(ctr_lat, ctr_lon) :
         loc = GeoLocation.from_degrees(ctr_lat, ctr_lon) # ex: Shibuya station
         distance = 5  # kilometer
         SE_loc, NE_loc, NW_loc, SW_loc = loc.bounding_locations(distance) # return geohash of bounding box points
-        print(SE_loc.deg_lat, SE_loc.deg_lon)
-        SE_hash = pgh.encode(SE_loc.deg_lat, SE_loc.deg_lon, precision = 8)
-        NE_hash = pgh.encode(NE_loc.deg_lat, NE_loc.deg_lon, precision = 8)
-        NW_hash = pgh.encode(NW_loc.deg_lat, NW_loc.deg_lon, precision = 8)
-        SW_hash = pgh.encode(SW_loc.deg_lat, SW_loc.deg_lon, precision = 8)
+        print('here',SE_loc.deg_lat, SE_loc.deg_lon)
+        SE_hash = pgh.encode(SE_loc.deg_lat, SE_loc.deg_lon, precision = 6)
+        NE_hash = pgh.encode(NE_loc.deg_lat, NE_loc.deg_lon, precision = 6)
+        NW_hash = pgh.encode(NW_loc.deg_lat, NW_loc.deg_lon, precision = 6)
+        SW_hash = pgh.encode(SW_loc.deg_lat, SW_loc.deg_lon, precision = 6)
+        print('here')
         li = [geohashToNum(SE_hash), geohashToNum(NE_hash), geohashToNum(NW_hash), geohashToNum(SW_hash)] # 32 digits number to culculate
-
+        print('here')
         # print(loc.distance_to(SE_loc))
         # print(loc.distance_to(NE_loc)) 
         # print(loc.distance_to(NW_loc)) 
@@ -180,6 +180,7 @@ def GetHashes(ctr_lat, ctr_lon) :
         for el in areaGeohashList:
             if el['geolocation'].distance_to(loc) < distance:
                 hash_in_distance.append(el['geohash'])
+        print(hash_in_distance)
         return hash_in_distance
         # with open('eggs.csv', 'w') as csvfile:
         #     writer = csv.writer(csvfile)
@@ -189,30 +190,38 @@ app = FastAPI()
 
 @app.get("/search") ## 2個エンドポイントつくちゃったから最初の部分が採用される
 async def get_name(name: str = None, rating: int = None, price_type: str = None, latitude: str = None, longtitude: str = None):
-    li = collection
+    queries = collection
     if name != None:
-        li = li.where('name', '==', name) 
+        queries = queries.where('name', '==', name) 
     if rating != None:
-        li = li.where('rating', '>', rating).order_by('rating', direction=firestore.Query.DESCENDING)
+        queries = queries.where('rating', '>', rating).order_by('rating', direction=firestore.Query.DESCENDING)
     if price_type != None:
-        li = li.where('price', '==', price_type).order_by('name') # need to create index in price ascending name ascending
+        queries = queries.where('price', '==', price_type).order_by('name') # need to create index in price ascending name ascending
     if latitude != None and longtitude != None:
         centerInstance = GeoLocation.from_degrees(latitude, longtitude)
         hashes_in_distance = GetHashes(latitude, longtitude)
-        li = li.where('geohash', 'in' , hashes_in_distance)
-        print(li)
-        for i in li:
-            current_loc = GeoLocation.from_degrees(i[0]['latitude'], i[0]['longtitude'])
-            i['distance'] = current_loc.distance_to(centerInstance)
-        li = sorted(li, key = 'distance')
-    
+        correct_query_results = []
+        while hashes_in_distance:
+            hashes_in_distance_sliced = hashes_in_distance[:10]
+            del hashes_in_distance[:10]
+            correct_query_results.append(queries.where('geohash', 'in' , hashes_in_distance_sliced))
+        queries = correct_query_results
+        # if li:
+        #     for i in li: # sort the list in ascending order
+        #         current_loc = GeoLocation.from_degrees(i['latitude'], i['longtitude'])
+        #         i['distance'] = current_loc.distance_to(centerInstance)
+        #     li = sorted(li, key = 'distance')
+        # else: li["error_message"] = "No match"
    
-    if li != None:
-        li = li.get()
+    if queries != None:
+        print(queries)
         venue = dict()
         key = 0
-        for el in li:
-            venue[key] = el.to_dict()
-            key += 1
+        for query in queries:
+            query = query.get()
+            for document in query:
+                # print(document.to_dict())
+                venue[key] = document.to_dict()
+                key += 1
         return venue
     else: return  "No match"
