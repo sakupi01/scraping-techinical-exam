@@ -1,13 +1,12 @@
 import React from "react";
 import {Grid, Box} from "@mui/material";
 import VenueCard from './components/VenueCard'
-import {useState, useEffect, useLayoutEffect} from 'react';
 import {useLocation} from "react-router-dom";
 
 
 export const Venues = () => {
 
-const [data, setData] = useState([{}])
+// const [data, setData] = useState([{}])
 // const [query, setQuery] = useState("")
 
 
@@ -17,8 +16,9 @@ const [data, setData] = useState([{}])
 
   // to get the data from back
   console.log(useLocation());
-  data = useLocation().state
+  const location = useLocation().state;
   // useEffect(() => {
+  //   setData()
   //   const quelist = [ location[0], location[1], location[2], location[3], location[4]];
   //   let query_str= "/search?"
   //       quelist.forEach(el => {
@@ -40,26 +40,40 @@ const [data, setData] = useState([{}])
   //       }
   //     )
   //   }
-  // }, [query])
+  // }, [data])
 
   return ( 
-    <Box sx={{ flexGrow: 1 }}>
-          <Grid item xs={5}>
-            <VenueCard venue = {data[0]}></VenueCard>
+    <Box sx={{ flexGrow: 1 }} gap={2}>
+          <Grid container 
+          spacing={2}
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          >
+              <Grid item xs={12} sm={4}>
+                <VenueCard venue = {location[0]} color = {"#e57373"}></VenueCard>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <VenueCard venue = {location[1]} color = {'#ef9a9a'}></VenueCard>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <VenueCard venue = {location[2]} color = {"#ffcdd2"}></VenueCard>
+              </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <VenueCard venue = {data[1]}></VenueCard>
-          </Grid>
-          <Grid item xs={3}>
-            <VenueCard venue = {data[2]}></VenueCard>
-          </Grid>
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {data.slice(3).map((venue, index) => (
-            <Grid item xs={2} key={index}>
-                <VenueCard venue = {venue}></VenueCard>
+
+          <Grid container
+          spacing={4}
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="stretch"
+          >
+          {location.slice(3).map((venue, index) => (
+            <Grid item xs={12} sm={4} key={index}>
+                <VenueCard venue = {venue} color = {'#ffebee'}></VenueCard>
             </Grid>
           ))}
-        </Grid>
+
+      </Grid>
     </Box>
     );
 }

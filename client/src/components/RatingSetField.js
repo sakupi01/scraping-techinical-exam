@@ -10,6 +10,9 @@ export default function NameSearchField(props) {
         <Rating
         name="simple-controlled"
         onChange={handleRating}
+        sx = {{
+          margin: 5
+        }}
       />
     </div>
   );

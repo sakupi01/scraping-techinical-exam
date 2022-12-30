@@ -15,14 +15,14 @@ export default function Map(props) {
   };
 
   return (
-    <div style={{ height: '300px', width: '300px' }}>
+    <div style={{ height: '300px', width: '300px' , margin:'10px'}}>
       <Typography component="legend">Pick up venues with in 5km radius from the point.</Typography>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyBgcU7jcXKTAPKA3pEHAn0Ie9Vrili52WA" }}
         defaultCenter={defaultLatLng}
         defaultZoom={16}
         onClick={setLatLng}
-      />
+       />
     </div>
   );
 }

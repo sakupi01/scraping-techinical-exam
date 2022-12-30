@@ -12,6 +12,9 @@ export default function NameSearchField(props) {
           variant="standard"
           helperText="Input the venue name"
           onChange={handleName}
+          sx = {{
+            margin: 5
+          }}
         />
   );
 }

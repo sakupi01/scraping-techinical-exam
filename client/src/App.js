@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import {Venues} from './Venues';
 import Search from './Search';
-// import NotFound from './NotFound';
 
 function App() {
   return (

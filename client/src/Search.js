@@ -1,5 +1,5 @@
 import { Button, styled } from "@mui/material";
-import AcUnitIcon from '@mui/icons-material/AcUnit';
+import SearchIcon from '@mui/icons-material/Search';
 import {useState, useEffect} from 'react';
 import NameSearchField from './components/NameSearchField';
 import RatingSetField from './components/RatingSetField';
@@ -9,8 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function Search() {
     // to render the data I get
-    const navigate = useNavigate()
+    
     // const [data, setData] = useState([{}])
+    const navigate = useNavigate()
     const [query, setQuery] = useState("")
     const [name, setName] = useState([false, "name", ""])
     const [rating, setRating] = useState([false, "rating", 0]);
@@ -29,8 +30,8 @@ export default function Search() {
         
       setQuery(query_str);
     }
+
     useEffect(() => {
-      
       if(query !== ""){
           console.log(query);
           fetch(query).then(
@@ -47,7 +48,7 @@ export default function Search() {
 
     const BlueButton =  styled(Button)(({theme})=>({
       backgroundColor: theme.palette.primary,
-      color: "#888",
+      color: "white",
       margin:5,
       "&:hover":{
         backgroundColor: "primary",
@@ -59,17 +60,20 @@ export default function Search() {
     }))
 
   return (
-    <div style={{ height: '300px', width: '300px' }}>
+    <div style={{display:'flex', flexDirection: "column", justifyContent: 'center', alignItems: 'center' }}>
 
         <NameSearchField setName = {setName}/>
         <RatingSetField setRating = {setRating}/>
         <PriceSelectField setPrice = {setPrice}/>
         <Map setLat = {setLat} setLon = {setLon} />
-
+        <br/> 
         <BlueButton 
           variant="contained"
-          startIcon={<AcUnitIcon />}
+          startIcon={<SearchIcon />}
           onClick = {handleClick}
+          sx = {{
+            margin: 5,
+          }}
         >
         </BlueButton>
     </div>
