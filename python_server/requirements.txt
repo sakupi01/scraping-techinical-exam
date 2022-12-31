@@ -1,7 +1,7 @@
 fastapi
 firebase-admin
 pygeohash
-uvicorn
+guvicorn
 # aiohttp==3.8.1
 # aiosignal==1.2.0
 # alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work

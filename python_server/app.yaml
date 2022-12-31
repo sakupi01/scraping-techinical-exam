@@ -1,6 +1,7 @@
 runtime: python37
 env: standard
 service: default
+entrypoint: gunicorn -k uvicorn.workers.UvicornWorker main:app
 
 automatic_scaling:
   min_idle_instances: automatic
