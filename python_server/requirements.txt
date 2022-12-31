@@ -1,6 +1,6 @@
 fastapi
 firebase-admin
-guvicorn
+gunicorn
 uvicorn
 pygeohash
 # aiohttp==3.8.1
