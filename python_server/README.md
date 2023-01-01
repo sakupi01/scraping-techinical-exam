@@ -1,1 +1,0 @@
-# scraping-techinical-exam

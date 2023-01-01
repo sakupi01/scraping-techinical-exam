@@ -34,7 +34,7 @@ export default function Search() {
     useEffect(() => {
       if(query !== ""){
           console.log(query);
-          fetch(query).then(
+          fetch(query).then( //Thanks to the configuration established by create-react-app, the Webpack dev server will infer what traffic to proxy. It will proxy a request if the URL is not recognized or if the request is not loading static assets (like HTML/CSS/JS).
             res => res.json()
             ).then(
               response => {
