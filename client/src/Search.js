@@ -35,12 +35,18 @@ export default function Search() {
       if(query !== ""){
           console.log(query);
           fetch(query).then( //Thanks to the configuration established by create-react-app, the Webpack dev server will infer what traffic to proxy. It will proxy a request if the URL is not recognized or if the request is not loading static assets (like HTML/CSS/JS).
-            res => res.json()
+            res => 
+              {
+                res.json()
+                console.log('here');
+              }
             ).then(
               response => {
-                // setData(response)
-                navigate("/result", { state: response })
                 console.log(response)
+                navigate("/result", { state: response })
+              },
+              error=>{
+                console.log("Error of JSON: ");
               }
               )
         }
