@@ -6,9 +6,7 @@ import pygeohash as pgh
 import math
 import uvicorn
 
-
-print('Hello World!')
-
+# 📎 Algorithm to extract geohashes with in XX kilometers from the target point. **********************************
 geohashChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
  
 class GeoLocation:
@@ -137,10 +135,9 @@ def geohashToNum(geohash):
         result = result + geohashChars.index(geohash[i]) * base
         base = base * 32
     return result
-    # /**
-#  * 計算用の数値（32進数）からgeohashに戻す
-#  * @param {Number} num 
-#  */
+ 
+#  Returns from a number (in 32 decimal) to geohash for calculation purposes.
+#  @param {Number} num 
 def numToGeohash(num):
     result = ''
     while num > 0:
@@ -168,32 +165,30 @@ def GetHashes(ctr_lat, ctr_lon) :
         NW_hash = pgh.encode(NW_loc.deg_lat, NW_loc.deg_lon, precision = 6)
         SW_hash = pgh.encode(SW_loc.deg_lat, SW_loc.deg_lon, precision = 6)
         li = [geohashToNum(SE_hash), geohashToNum(NE_hash), geohashToNum(NW_hash), geohashToNum(SW_hash)] # 32 digits number to culculate
+        # 📋 Test********************************
         # print(loc.distance_to(SE_loc))
         # print(loc.distance_to(NE_loc)) 
         # print(loc.distance_to(NW_loc)) 
         # print(loc.distance_to(SW_loc))
         areaGeohashList = getArea(li)
-        # print(areaGeohashList)
 
-        # // 100メートル以内に入っているものだけを抽出
+        # Only geohashes within XX kilometer are extracted.
         hash_in_distance = []
         for el in areaGeohashList:
             if el['geolocation'].distance_to(loc) < distance:
                 hash_in_distance.append(el['geohash'])
         return hash_in_distance
+
+        # 📋 Test and Extract to check**********************************
         # with open('eggs.csv', 'w') as csvfile:
         #     writer = csv.writer(csvfile)
         #     writer.writerow(hash_in_distance)   
-# # Sort key for distance sort
-# def sorting_value(item, lat, lon):
-#     centerInstance = GeoLocation.from_degrees(lat, lon)
-#     current_loc = GeoLocation.from_degrees(item[2], item[3])
-#     distance = current_loc.distance_to(centerInstance)
-#     return distance
 
+
+# ⛏Create API**********************************
 app = FastAPI()
 
-@app.get("/search") ## 2個エンドポイントつくちゃったから最初の部分が採用される
+@app.get("/search")
 async def get_name(name: str = None, rating: float = None, price_type: str = None, latitude: str = None, longtitude: str = None):
     queries = collection
     if name != None:
@@ -201,13 +196,9 @@ async def get_name(name: str = None, rating: float = None, price_type: str = Non
     if rating != None:
         queries = queries.where('rating', '>', rating).order_by('rating', direction=firestore.Query.DESCENDING)
     if price_type != None:
-        queries = queries.where('price', '==', price_type).order_by('name') # need to create index in price ascending name ascending
+        queries = queries.where('price', '==', price_type).order_by('name')
     if latitude != None and longtitude != None:
-        
-        # center location からの距離が短い順に並べ替え
-        # queries = queries.where('geohash', '=>', pgh.encode(latitude, longtitude,  precision = 6)).order_by('geohash')
-        # geohashに基づきクエリを作成
-        # hashes_in_distance_slicedはgeohashが小さい順に並んでる
+        # Returns the set of geohashes within 5 km of an arbitrary latitude and longitude in descending order.
         hashes_in_distance = GetHashes(latitude, longtitude)
         correct_query_results = []
         while hashes_in_distance:
@@ -228,6 +219,7 @@ async def get_name(name: str = None, rating: float = None, price_type: str = Non
             for document in query:
                 venue.append(document.to_dict())
                 key += 1
+        # Sort by shortest distance from center location
         if latitude != None and longtitude != None:
             venue = sorted(venue, 
                 key = lambda item: 

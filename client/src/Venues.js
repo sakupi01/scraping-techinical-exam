@@ -6,41 +6,9 @@ import {useLocation} from "react-router-dom";
 
 export const Venues = () => {
 
-// const [data, setData] = useState([{}])
-// const [query, setQuery] = useState("")
-
-
-//   useLayoutEffect((location) => {
-        
-//   },[])
-
-  // to get the data from back
+  // to get the data from backend
   console.log(useLocation());
   const location = useLocation().state;
-  // useEffect(() => {
-  //   setData()
-  //   const quelist = [ location[0], location[1], location[2], location[3], location[4]];
-  //   let query_str= "/search?"
-  //       quelist.forEach(el => {
-  //         if (el[0] !== false) {
-  //           query_str = query_str + el[1] + "=" + el[2] + "&";
-  //         }
-  //       });
-        
-  //   setQuery(query_str);
-
-  //   if(query !== ""){
-  //     console.log(query);
-  //     fetch(query).then(
-  //       res => res.json()
-  //     ).then(
-  //       response => {
-  //         setData(response)
-  //         console.log(response)
-  //       }
-  //     )
-  //   }
-  // }, [data])
 
   return ( 
     <Box sx={{ flexGrow: 1 }} gap={2}>

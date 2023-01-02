@@ -8,9 +8,6 @@ import Map from './components/Map';
 import { useNavigate } from "react-router-dom";
 
 export default function Search() {
-    // to render the data I get
-    
-    // const [data, setData] = useState([{}])
     const navigate = useNavigate()
     const [query, setQuery] = useState("")
     const [name, setName] = useState([false, "name", ""])
@@ -34,19 +31,17 @@ export default function Search() {
     useEffect(() => {
       if(query !== ""){
           console.log(query);
-          fetch(query).then( //Thanks to the configuration established by create-react-app, the Webpack dev server will infer what traffic to proxy. It will proxy a request if the URL is not recognized or if the request is not loading static assets (like HTML/CSS/JS).
+          // (In the Development Phase)The configuration established by create-react-app, the Webpack dev server will infer what traffic to proxy. 
+          // It will proxy a request if the URL is not recognized or if the request is not loading static assets (like HTML/CSS/JS).
+          fetch(query).then( 
             res => 
               {
                 res.json()
-                console.log('here');
               }
             ).then(
               response => {
                 console.log(response)
                 navigate("/result", { state: response })
-              },
-              error=>{
-                console.log("Error of JSON: ");
               }
               )
         }
