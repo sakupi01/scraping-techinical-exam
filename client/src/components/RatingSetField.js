@@ -5,7 +5,7 @@ export default function NameSearchField(props) {
     props.setRating([true , "rating", event.target.value]);
   };
   return (
-    <div>
+    <div  style={{display:'flex', flexDirection: "column", justifyContent: 'center', alignItems: 'center' }}>
       <Typography component="legend">Rating</Typography>
         <Rating
         name="simple-controlled"

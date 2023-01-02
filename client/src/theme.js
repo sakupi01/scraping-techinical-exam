@@ -4,10 +4,10 @@ import { createTheme } from "@mui/system";
   {
     palette: {
       primary: {
-        main: 'red',
+        main: '#F25041',
       },
       secondary: {
-        main: 'pink',
+        main: '#F2EDEB',
       },
     },
   }

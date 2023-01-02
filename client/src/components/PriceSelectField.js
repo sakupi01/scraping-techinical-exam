@@ -10,8 +10,8 @@ export default function NameSearchField(props) {
   };
 
   return (
-    <div>
-      <Typography component="legend">Price</Typography>
+    <div  style={{display:'flex', flexDirection: "column", justifyContent: 'center', alignItems: 'center' }}>
+      {/* <Typography component="legend">Price</Typography> */}
             <FormControl sx={{ m: 1, minWidth: 120 }}>
               <InputLabel id="simple-select">Price</InputLabel>
                 <Select

@@ -1,11 +1,13 @@
-import { Button, styled } from "@mui/material";
+import { Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import {useState, useEffect} from 'react';
+import AppBar from './components/Bar';
 import NameSearchField from './components/NameSearchField';
 import RatingSetField from './components/RatingSetField';
 import PriceSelectField from './components/PriceSelectField';
 import Map from './components/Map';
 import { useNavigate } from "react-router-dom";
+import Container from '@mui/material/Container';
 
 export default function Search() {
     const navigate = useNavigate()
@@ -35,9 +37,7 @@ export default function Search() {
           // It will proxy a request if the URL is not recognized or if the request is not loading static assets (like HTML/CSS/JS).
           fetch(query).then( 
             res => 
-              {
                 res.json()
-              }
             ).then(
               response => {
                 console.log(response)
@@ -47,36 +47,34 @@ export default function Search() {
         }
       }, [query])
 
-    const BlueButton =  styled(Button)(({theme})=>({
-      backgroundColor: theme.palette.primary,
-      color: "white",
-      margin:5,
-      "&:hover":{
-        backgroundColor: "primary",
-      },
-      "&:disabled":{
-        backgroundColor: "gray",
-        color:'white'
-      }
-    }))
+      const primary = '#F2EDEB'; // #f44336
+      const accent = '#F25041'; // #e040fb
 
   return (
-    <div style={{display:'flex', flexDirection: "column", justifyContent: 'center', alignItems: 'center' }}>
-
-        <NameSearchField setName = {setName}/>
-        <RatingSetField setRating = {setRating}/>
-        <PriceSelectField setPrice = {setPrice}/>
-        <Map setLat = {setLat} setLon = {setLon} />
-        <br/> 
-        <BlueButton 
-          variant="contained"
-          startIcon={<SearchIcon />}
-          onClick = {handleClick}
-          sx = {{
-            margin: 5,
-          }}
-        >
-        </BlueButton>
+    <div>
+      <AppBar></AppBar>
+      <Container maxWidth="sm">
+        <div style={{display:'flex', flexDirection: "column", justifyContent: 'center', alignItems: 'center' }}>
+            
+            <NameSearchField setName = {setName}/>
+            <RatingSetField setRating = {setRating}/>
+            <PriceSelectField setPrice = {setPrice}/>
+            <Map setLat = {setLat} setLon = {setLon} />
+            <br/> 
+            <Button 
+              variant="contained"
+              startIcon={<SearchIcon />}
+              onClick = {handleClick}
+              sx = {{
+                backgroundColor: primary,
+                color: accent,
+                margin: 10,
+                textAlign: "center"
+              }}
+            >Search
+            </Button>
+        </div>
+      </Container>
     </div>
   );
 }

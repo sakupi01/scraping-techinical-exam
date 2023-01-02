@@ -1,4 +1,3 @@
-# APIのすべての機能を提供するPythonクラス
 from fastapi import FastAPI
 from firestore_task import collection
 from firebase_admin import firestore
@@ -6,7 +5,7 @@ import pygeohash as pgh
 import math
 import uvicorn
 
-# 📎 Algorithm to extract geohashes with in XX kilometers from the target point. **********************************
+# 📎 Algorithm to extract geohashes with in XX kilometers from the target point. 
 geohashChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
  
 class GeoLocation:
@@ -135,7 +134,7 @@ def geohashToNum(geohash):
         result = result + geohashChars.index(geohash[i]) * base
         base = base * 32
     return result
- 
+
 #  Returns from a number (in 32 decimal) to geohash for calculation purposes.
 #  @param {Number} num 
 def numToGeohash(num):
@@ -178,12 +177,10 @@ def GetHashes(ctr_lat, ctr_lon) :
             if el['geolocation'].distance_to(loc) < distance:
                 hash_in_distance.append(el['geohash'])
         return hash_in_distance
-
         # 📋 Test and Extract to check**********************************
         # with open('eggs.csv', 'w') as csvfile:
         #     writer = csv.writer(csvfile)
-        #     writer.writerow(hash_in_distance)   
-
+        #     writer.writerow(hash_in_distance)    
 
 # ⛏Create API**********************************
 app = FastAPI()
@@ -196,7 +193,7 @@ async def get_name(name: str = None, rating: float = None, price_type: str = Non
     if rating != None:
         queries = queries.where('rating', '>', rating).order_by('rating', direction=firestore.Query.DESCENDING)
     if price_type != None:
-        queries = queries.where('price', '==', price_type).order_by('name')
+        queries = queries.where('price', '==', price_type).order_by('name') # need to create index in price ascending name ascending
     if latitude != None and longtitude != None:
         # Returns the set of geohashes within 5 km of an arbitrary latitude and longitude in descending order.
         hashes_in_distance = GetHashes(latitude, longtitude)
