@@ -8,8 +8,11 @@ import Typography from '@mui/material/Typography';
 
 export default function VenueCard(props) {
   console.log(props.venue)
+  const primary = '#F2EDEB';
+  const accent = '#F25041';
+
   return (
-    <Card sx={{ minWidth: 275 }} style={{backgroundColor: props.color}}>
+    <Card sx={{ minWidth: 275 }} style={{backgroundColor: primary, color: accent}}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Price : {props.venue.price}

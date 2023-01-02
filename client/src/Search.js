@@ -69,7 +69,15 @@ export default function Search() {
                 backgroundColor: primary,
                 color: accent,
                 margin: 10,
-                textAlign: "center"
+                textAlign: "center",
+                ':hover': {
+                  backgroundColor: primary, // theme.palette.primary.main
+                  color: accent,
+                },
+                ':click': {
+                  backgroundColor: primary, // theme.palette.primary.main
+                  color: accent,
+                }
               }}
             >Search
             </Button>
