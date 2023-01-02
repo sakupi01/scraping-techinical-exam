@@ -47,8 +47,8 @@ export default function Search() {
         }
       }, [query])
 
-      const primary = '#F2EDEB'; // #f44336
-      const accent = '#F25041'; // #e040fb
+      const primary = '#F2EDEB';
+      const accent = '#F25041';
 
   return (
     <div>
